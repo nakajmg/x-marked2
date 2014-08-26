@@ -1,0 +1,96 @@
+<script src="marked.js"></script>
+<template id="x-marked">
+  <link rel="stylesheet" href="github-markdown.css">
+  <style>
+    :unresolved { display: none; }
+    [data-x-marked-originalText] { display: none; }
+    [data-x-marked-content], [data-x-marked-input] {
+      display: table-cell;
+      width: 50%;
+      box-sizing: border-box;
+      vertical-align: top;
+    }
+  </style>
+  <section class="x-marked">
+    <div data-x-marked-content></div>
+    <div data-x-marked-input contenteditable></div>
+  </section>
+</template>
+
+<script>
+(function() {
+  var currentScript = document._currentScript || document.currentScript;
+  var doc = currentScript.ownerDocument;
+  
+  var proto = Object.create(HTMLElement.prototype, {
+    createdCallback: {
+      value: function() {
+        var _this = this;
+        var root = this.createShadowRoot();
+        var tmpl = doc.querySelector('#x-marked');
+        var clone = document.importNode(tmpl.content, true);
+        this.createShadowRoot().appendChild(clone);
+        this.xContent = this.shadowRoot.querySelector('[data-x-marked-content]');
+        this.xInput = this.shadowRoot.querySelector('[data-x-marked-input]');
+        this._applyStyleSheet();
+        
+      }
+    },
+    attachedCallback: {
+      value: function() {
+        var _this = this;
+        var originalText = this.innerHTML;
+        this.xInput.innerHTML = this.innerHTML.replace(/[\n\r]/g, "<br>");
+        this.xContent.innerHTML = marked(originalText);
+        
+        this.xInput.addEventListener('keyup', _apply);
+        this.xInput.addEventListener('onchange', _apply);
+        
+        function _apply() {
+          _this.xContent.innerHTML = marked(_this.xInput.innerHTML.replace(/\<br\>/g, "\n"));
+        }
+      }
+    },
+    _applyStyleSheet: {
+      value: function() {
+        var isApplyStyle = this.hasAttribute('data-apply-style');
+        if(isApplyStyle) {
+          this._loadStyleSheet();
+        }
+      }
+    },
+    _loadStyleSheet: {
+      value: function() {
+        var _this = this;
+        var styleSheets = this.shadowRoot.querySelectorAll('link[rel=stylesheet]');
+        
+        [].forEach.call(styleSheets, function(styleSheet) {
+          var href = styleSheet.getAttribute('href');
+          if(href) { _load(href); }
+        });
+        
+        function _load(href) {
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', href, true);
+          xhr.onload = function() {
+            if (xhr.status === 200){
+              _insert(xhr.responseText);
+              if(href === "github-markdown.css") {
+                _this.shadowRoot.querySelector('[data-x-marked-content]').classList.add('markdown-body');  
+              }
+            }
+          };
+          xhr.send();
+        }
+        function _insert(styleSheetText) {
+          var style = document.createElement('style');
+          style.textContent = styleSheetText;
+          _this.shadowRoot.appendChild(style);
+        }
+      }
+    }
+  });
+
+  document.registerElement('x-marked', {prototype: proto});
+})();
+</script>

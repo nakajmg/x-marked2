@@ -1,15 +1,15 @@
-# x-marked
-
-x-marked is Web Components module. render markdown to HTML.
-
----
-
-[demo](http://nakajmg.github.io/x-marked/)
-
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="import" href="x-marked.html">
+  </head>
+  <body>
+    <x-marked data-apply-style># x-marked
+  
 マークダウンで書かれたテキストをHTMLに変換するウェッブコンポーネンツッ
 
 * リストだって
-* このとおり
+* このとおり！
 
 `x-marked`タグを指定すれば使える超簡単！
 
@@ -20,7 +20,7 @@ x-marked is Web Components module. render markdown to HTML.
 
 ## 使い方
 ```
-<x-marked>#markdownテキストをいれるとレンダリングされるよ</x-marked>
+x-markedの中にmarkdownテキストをいれるとレンダリングされるよ
 ```
 
 タグに`data-apply-style`をつけるとGitHub風なレンダリングになるよ。
@@ -29,3 +29,7 @@ x-marked is Web Components module. render markdown to HTML.
 
 * [marked.js](https://github.com/chjj/marked)
 * [github-markdown-css](https://github.com/sindresorhus/github-markdown-css)
+
+    </x-marked>
+  </body>
+</html>
