@@ -1,10 +1,10 @@
-# x-marked
+# x-marked2
 
-x-marked is Web Components module. render markdown to HTML.
+x-marked2 is Web Components module. render markdown to HTML.
 
 ---
 
-[demo](http://nakajmg.github.io/x-marked/)
+[demo](http://nakajmg.github.io/x-marked2/)
 
 マークダウンで書かれたテキストをHTMLに変換するウェッブコンポーネンツッ
 
